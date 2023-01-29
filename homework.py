@@ -17,10 +17,10 @@ class InfoMessage:
 
     def get_message(self) -> str:
         return (f'Тип тренировки: {self.training_type}; '
-                f'Длительность: {self.duration} ч.; '
-                f'Дистанция: {self.distance} км; '
-                f'Ср. скорость: {self.speed} км/ч; '
-                f'Потрачено ккал: {self.calories}.')
+                f'Длительность: {self.duration:.{3}f} ч.; '
+                f'Дистанция: {self.distance:.{3}f} км; '
+                f'Ср. скорость: {self.speed:.{3}f} км/ч; '
+                f'Потрачено ккал: {self.calories:.{3}f}.')
 
 
 class Training:
@@ -43,7 +43,7 @@ class Training:
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
-        return self.action * self.LEN_STEP / self.M_IN_KM
+        return (self.action * self.LEN_STEP) / self.M_IN_KM
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
@@ -82,9 +82,9 @@ class Running(Training):
                          weight)
 
     def get_spent_calories(self) -> float:
-        return ((self.CALORIES_MEAN_SPEED_MULTIPLIER * self.get_distance()
-                + self.CALORIES_MEAN_SPEED_SHIFT) * self.weight
-                / self.weight / self.M_IN_KM * self.duration)
+        return ((self.CALORIES_MEAN_SPEED_MULTIPLIER * self.get_mean_speed()
+                + self.CALORIES_MEAN_SPEED_SHIFT) * self.weight / self.M_IN_KM
+                * (self.duration * self.MIN_IN_H))
 
 
 class SportsWalking(Training):
@@ -92,6 +92,8 @@ class SportsWalking(Training):
 
     WEIGHT_MODIFICATOR = 0.035
     SPEED_MODIFICATOR = 0.029
+    KMH_IN_MS = 0.278
+    CM_IN_M = 100
 
     def __init__(self,
                  action: int,
@@ -107,7 +109,8 @@ class SportsWalking(Training):
 
     def get_spent_calories(self) -> float:
         return ((self.WEIGHT_MODIFICATOR * self.weight
-                 + (self.get_mean_speed() ** 2 / self.height)
+                 + ((self.get_mean_speed() * self.KMH_IN_MS) ** 2
+                    / (self.height / self.CM_IN_M))
                  * self.SPEED_MODIFICATOR * self.weight)
                 * (self.duration * self.MIN_IN_H))
 
