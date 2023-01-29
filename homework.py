@@ -2,25 +2,25 @@ class InfoMessage:
     """Информационное сообщение о тренировке."""
 
     def __init__(self,
-                 training_type,                 
+                 training_type,
                  duration,
                  distance,
                  speed,
                  calories
                  ) -> None:
-        
+
         self.training_type = training_type
         self.duration = duration
         self.distance = distance
         self.speed = speed
         self.calories = calories
-        
+
     def get_message(self) -> str:
         return (f'Тип тренировки: {self.training_type}; '
                 f'Длительность: {self.duration} ч.; '
                 f'Дистанция: {self.distance} км; '
                 f'Ср. скорость: {self.speed} км/ч; '
-                f'Потрачено ккал: {self.calories}.')    
+                f'Потрачено ккал: {self.calories}.')
 
 
 class Training:
@@ -55,12 +55,14 @@ class Training:
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
-        return InfoMessage(Training,
-                           self.duration,
-                           self.get_distance,
-                           self.get_mean_speed,
-                           self.get_spent_calories
-                           )
+
+        message = InfoMessage(self.__class__.__name__,
+                              self.duration,
+                              self.get_distance(),
+                              self.get_mean_speed(),
+                              self.get_spent_calories()
+                              )
+        return message
 
 
 class Running(Training):
@@ -105,7 +107,7 @@ class SportsWalking(Training):
 
     def get_spent_calories(self) -> float:
         return ((self.WEIGHT_MODIFICATOR * self.weight
-                 + (self.get_mean_speed() ** 2 / self.height )
+                 + (self.get_mean_speed() ** 2 / self.height)
                  * self.SPEED_MODIFICATOR * self.weight)
                 * (self.duration * self.MIN_IN_H))
 
@@ -141,27 +143,24 @@ class Swimming(Training):
                 * self.duration)
 
 
-training_type: dict = {'SWM': Swimming,
+def read_package(workout_type: str, data: list) -> Training:
+    """Прочитать данные полученные от датчиков."""
+
+    training_code: dict = {'SWM': Swimming,
                            'RUN': Running,
                            'WLK': SportsWalking}
 
-def read_package(workout_type: str, data: list) -> Training:
-    """Прочитать данные полученные от датчиков."""
-    
-    while True:
-        activity: Training = training_type[workout_type](*data)
-
-        break
+    activity: Training = training_code[workout_type](*data)
 
     return activity
-    
+
 
 def main(training: Training) -> None:
     """Главная функция."""
-    
-    info = training.show_training_info()
 
-    return print(f'{info.get_message}')
+    info: InfoMessage = training.show_training_info()
+
+    print(info.get_message())
 
 
 if __name__ == '__main__':
