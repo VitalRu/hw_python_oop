@@ -4,6 +4,7 @@ from dataclasses import dataclass
 @dataclass
 class InfoMessage:
     """Информационное сообщение о тренировке."""
+
     training_type: str
     duration: float
     distance: float
@@ -21,6 +22,7 @@ class InfoMessage:
 @dataclass
 class Training:
     """Базовый класс тренировки."""
+
     LEN_STEP = 0.65
     M_IN_KM = 1000
     MIN_IN_H = 60
@@ -54,6 +56,7 @@ class Training:
 
 class Running(Training):
     """Тренировка: бег."""
+
     LEN_STEP = 0.65
     CALORIES_MEAN_SPEED_MULTIPLIER = 18
     CALORIES_MEAN_SPEED_SHIFT = 1.79
@@ -66,6 +69,7 @@ class Running(Training):
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
+
     WEIGHT_MODIFICATOR = 0.035
     SPEED_MODIFICATOR = 0.029
     KMH_IN_MS = 0.278
@@ -95,6 +99,7 @@ class SportsWalking(Training):
 
 class Swimming(Training):
     """Тренировка: плавание."""
+
     LEN_STEP = 1.38
     CALORY_BURN_MODIFICATOR = 2
     SWIMM_SPEED_SHIFT = 1.1
