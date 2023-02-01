@@ -4,7 +4,6 @@ from dataclasses import dataclass
 @dataclass
 class InfoMessage:
     """Информационное сообщение о тренировке."""
-
     training_type: str
     duration: float
     distance: float
@@ -22,7 +21,6 @@ class InfoMessage:
 @dataclass
 class Training:
     """Базовый класс тренировки."""
-
     LEN_STEP = 0.65
     M_IN_KM = 1000
     MIN_IN_H = 60
@@ -56,7 +54,6 @@ class Training:
 
 class Running(Training):
     """Тренировка: бег."""
-
     LEN_STEP = 0.65
     CALORIES_MEAN_SPEED_MULTIPLIER = 18
     CALORIES_MEAN_SPEED_SHIFT = 1.79
@@ -69,7 +66,6 @@ class Running(Training):
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
-
     WEIGHT_MODIFICATOR = 0.035
     SPEED_MODIFICATOR = 0.029
     KMH_IN_MS = 0.278
@@ -82,13 +78,11 @@ class SportsWalking(Training):
             weight: float,
             height: float
     ) -> None:
-
         super().__init__(
             action,
             duration,
             weight
         )
-
         self.height = height
 
     def get_spent_calories(self) -> float:
@@ -101,7 +95,6 @@ class SportsWalking(Training):
 
 class Swimming(Training):
     """Тренировка: плавание."""
-
     LEN_STEP = 1.38
     CALORY_BURN_MODIFICATOR = 2
     SWIMM_SPEED_SHIFT = 1.1
@@ -114,11 +107,9 @@ class Swimming(Training):
             length_pool: float,
             count_pool: int
     ) -> None:
-
         super().__init__(action,
                          duration,
                          weight)
-
         self.length_pool = length_pool
         self.count_pool = count_pool
 
@@ -134,13 +125,11 @@ class Swimming(Training):
 
 def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
-
     training_code: dict = {
         'SWM': Swimming,
         'RUN': Running,
-        'WLK': SportsWalking
+        'WLK': SportsWalking,
     }
-
     if workout_type.upper() not in training_code:
         raise ValueError(f'Незвестный тип тренировки {workout_type}')
     return training_code[workout_type](*data)
@@ -148,9 +137,7 @@ def read_package(workout_type: str, data: list) -> Training:
 
 def main(training: Training) -> None:
     """Главная функция."""
-
     info: InfoMessage = training.show_training_info()
-
     print(info.get_message())
 
 
